@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="2">
+
+	<name>upo_nhoa_perception</name>
+	<version>0.0.0</version>
+	<description>The upo_nhoa_perception package</description>
+	<maintainer email="famozur@upo.es">Fernando Amodeo</maintainer>
+	<license>MIT</license>
+
+	<buildtool_depend>catkin</buildtool_depend>
+
+	<depend>roscpp</depend>
+	<depend>image_transport</depend>
+	<depend>cv_bridge</depend>
+
+	<depend>std_msgs</depend>
+	<depend>upo_nhoa_msgs</depend>
+
+</package>
