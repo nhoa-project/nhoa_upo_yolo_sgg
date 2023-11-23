@@ -64,6 +64,11 @@ add_executable(yolov8_host
 	src/yolov8_model.cpp
 )
 
+add_executable(sggen_host
+	src/sggen_host.cpp
+	src/sggen_model.cpp
+)
+
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 add_dependencies(yolov8_host
@@ -71,8 +76,18 @@ add_dependencies(yolov8_host
 	${catkin_EXPORTED_TARGETS}
 )
 
+add_dependencies(sggen_host
+	${${PROJECT_NAME}_EXPORTED_TARGETS}
+	${catkin_EXPORTED_TARGETS}
+)
+
 ## Specify libraries to link a library or executable target against
 target_link_libraries(yolov8_host PRIVATE
+	${catkin_LIBRARIES}
+	OnnxRuntime::Lib
+)
+
+target_link_libraries(sggen_host PRIVATE
 	${catkin_LIBRARIES}
 	OnnxRuntime::Lib
 )
@@ -86,7 +101,7 @@ target_link_libraries(yolov8_host PRIVATE
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
-install(TARGETS yolov8_host
+install(TARGETS yolov8_host sggen_host
 	RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

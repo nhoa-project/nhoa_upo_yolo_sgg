@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+
+	<!-- Node configuration -->
+	<arg name="node_name" default="sggen" />
+
+	<!-- Input RGB topic -->
+	<arg name="image_topic" default="/head_front_camera/color/image_raw" />
+	<arg name="image_transport" default="compressed" />
+
+	<!-- Path configuration -->
+	<arg name="data_dir" default="$(find upo_nhoa_perception)/data" />
+	<arg name="cuda_dir" default="/usr/local/cuda/lib64" />
+
+	<!-- Parameters -->
+	<arg name="model_file" default="sgg.onnx" />
+	<arg name="onto_file" default="teresa-onto.bin" />
+	<arg name="obj_names_file" default="oiv7.bin" />
+	<arg name="chosen_ids" default="322,381,594" />
+	<arg name="rel_thresh" default="0.0" />
+
+	<!-- YOLOv8 object detection node -->
+	<include file="$(find upo_nhoa_perception)/launch/yolov8.launch">
+		<arg name="image_topic" value="$(arg image_topic)" />
+		<arg name="image_transport" value="$(arg image_transport)" />
+	</include>
+
+	<!-- Scene graph generation node -->
+	<node pkg="upo_nhoa_perception" name="$(arg node_name)" type="sggen_host" output="screen" required="true">
+		<env name="LD_LIBRARY_PATH" value="$(env LD_LIBRARY_PATH):$(arg cuda_dir)"/>
+		<param name="image_topic" value="$(arg image_topic)" />
+		<param name="image_transport" value="$(arg image_transport)" />
+		<param name="model_file" value="$(arg data_dir)/$(arg model_file)" />
+		<param name="onto_file" value="$(arg data_dir)/$(arg onto_file)" />
+		<param name="obj_names_file" value="$(arg data_dir)/$(arg obj_names_file)" />
+		<param name="chosen_ids" type="yaml" value="[$(arg chosen_ids)]" />
+		<param name="rel_thresh" value="$(arg rel_thresh)" />
+	</node>
+
+</launch>
