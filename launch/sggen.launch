@@ -5,7 +5,7 @@
 	<arg name="node_name" default="sggen" />
 
 	<!-- Input RGB topic -->
-	<arg name="image_topic" default="/head_front_camera/color/image_raw" />
+	<arg name="image_topic" default="/xtion/rgb/image_raw" />
 	<arg name="image_transport" default="compressed" />
 
 	<!-- Path configuration -->
@@ -14,9 +14,9 @@
 
 	<!-- Parameters -->
 	<arg name="model_file" default="sgg.onnx" />
-	<arg name="onto_file" default="teresa-onto.bin" />
-	<arg name="obj_names_file" default="oiv7.bin" />
-	<arg name="chosen_ids" default="322,381,594" />
+	<arg name="onto_file" default="nhoa-onto.bin" />
+	<arg name="obj_names_file" default="coco.bin" />
+	<arg name="chosen_ids" default="0" />
 	<arg name="rel_thresh" default="0.0" />
 
 	<!-- YOLOv8 object detection node -->
