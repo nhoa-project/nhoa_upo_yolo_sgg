@@ -63,7 +63,7 @@ class SGGenHost final : protected RosNode, protected RosOnnxMixin<SGGenHost> {
 			}
 		}
 
-		if (chosen_objs.empty()) {
+		if (chosen_objs.empty() || (chosen_objs.size()==1 && obj_to_det.size()==1)) {
 			return;
 		}
 
