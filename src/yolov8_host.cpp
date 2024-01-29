@@ -31,6 +31,7 @@ class Yolov8Host final : protected RosNode, protected RosOnnxMixin<Yolov8Host> {
 	Yolov8Model m_model{ *this, getParam<std::string>("model_file") };
 	float m_objScoreThresh{ getParam<float>("obj_score_thresh") };
 	float m_nmsThresh{ getParam<float>("nms_thresh") };
+	std::string filter_on_object{getParamOptional<std::string>("filter_on_object").value_or("")};
 
 	std::vector<std::string> m_objNames{ [&] {
 		std::vector<std::string> ret;
@@ -38,11 +39,19 @@ class Yolov8Host final : protected RosNode, protected RosOnnxMixin<Yolov8Host> {
 		if (ros::NodeHandle::getParam("obj_names_file", path)) {
 			SemVecFile f{path};
 			ret.reserve(f.size());
+			std::set<uint32_t> filter_set{};
 			for (size_t i = 0; i < f.size(); i ++) {
 				ret.emplace_back(f.name(i));
+				if(filter_on_object.length() == 0 || ret.at(i).find(filter_on_object) != std::string::npos) 
+				{
+					filter_set.insert(i);
+					ROS_INFO("Detecting object with index (%ld) and label name (%s)", i, ret.at(i).c_str());
+				}
 			}
+			if(!filter_set.empty())
+				m_model.setFilterSet(std::move(filter_set));
 
-			ROS_INFO("Loaded %zu object names", ret.size());
+			ROS_INFO("Loaded %zu object names from file %s", ret.size(), path.c_str());
 		}
 
 		return ret;

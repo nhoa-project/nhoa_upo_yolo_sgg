@@ -18,6 +18,7 @@ class Yolov8Model final {
 	std::optional<Ort::MemoryInfo> m_memInfo{};
 	std::optional<Ort::Allocator> m_allocator{};
 	std::optional<Ort::IoBinding> m_binding{};
+	std::set<uint32_t> filter_set_;
 
 	unsigned m_imgDim{};
 
@@ -37,6 +38,8 @@ public:
 	Yolov8Model(Ort::Env& env, std::string const& modelPath);
 
 	std::vector<Result> operator()(cv::Mat const& rgb_in, float obj_score_thresh = 0.1f, float nms_thresh = 0.5f);
+
+	void setFilterSet(const std::set<uint32_t>& filter_set){filter_set_ = (filter_set);}
 
 	cv::Mat drawDetections(cv::Mat const& rgb_in, std::vector<Result> const& dets, std::vector<std::string> const& names);
 };

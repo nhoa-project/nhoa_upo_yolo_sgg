@@ -138,15 +138,19 @@ auto Yolov8Model::operator()(cv::Mat const& rgb_in, float obj_score_thresh, floa
 		for (unsigned j = 0; j < 4; j ++) {
 			boxpos.raw[j] = data[i + j*num_boxes] * in_dim / m_imgDim;
 		}
-
-		classes.emplace_back(clsid);
-		scores.emplace_back(score);
-		boxes.emplace_back(
-			boxpos.x - 0.5f*boxpos.w, // x
-			boxpos.y - 0.5f*boxpos.h, // y
-			boxpos.w,                 // width
-			boxpos.h                  // height
-		);
+		
+		if(filter_set_.empty() || filter_set_.find(clsid) != filter_set_.end())
+		{
+			classes.emplace_back(clsid);
+			scores.emplace_back(score);
+			boxes.emplace_back(
+				boxpos.x - 0.5f*boxpos.w, // x
+				boxpos.y - 0.5f*boxpos.h, // y
+				boxpos.w,                 // width
+				boxpos.h                  // height
+			);
+		}
+		
 	}
 
 	std::vector<int> nmsIndices;

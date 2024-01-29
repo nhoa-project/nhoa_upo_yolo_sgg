@@ -7,6 +7,7 @@
 
 // C++ stdlib
 #include <utility>
+#include <optional>
 
 // ROS core headers
 #include <ros/ros.h>
@@ -30,6 +31,15 @@ protected:
 		if (!ros::NodeHandle::getParam(key, ret)) {
 			ROS_FATAL("Cannot retrieve parameter %s", key.c_str());
 			std::abort();
+		}
+		return ret;
+	}
+
+	template <typename T>
+	std::optional<T> getParamOptional(std::string const& key) {
+		T ret;
+		if (!ros::NodeHandle::getParam(key, ret)) {
+			return std::nullopt;
 		}
 		return ret;
 	}
